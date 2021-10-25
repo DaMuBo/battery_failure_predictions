@@ -67,6 +67,11 @@ def feature_creator(df, columns,groupby, function = 'mean',frame='all'):
             tmp = df[selector].groupby(groupby).min().reset_index()
         elif function == 'max':
             tmp = df[selector].groupby(groupby).max().reset_index()
+        elif function == 'count':
+            tmp = df[selector].groupby(groupby).size().reset_index()
+            new_names[0] = f"{function}_entrys_{frame}"
+        elif function == 'sum':
+            tmp = df[selector].groupby(groupby).sum().reset_index()
         else:
             raise ValueError("""Unknown function provided. Select one of the defined functions. 
                              For more Information see description of Function""")
@@ -80,7 +85,7 @@ def feature_creator(df, columns,groupby, function = 'mean',frame='all'):
     if isinstance(columns,list):
         for value in new_names.values():
             if value in df.columns:
-                df.drop(key,axis=1 , inplace=True)
+                df.drop(value,axis=1 , inplace=True)
                 
                 
     elif new_names[columns] in df.columns:
