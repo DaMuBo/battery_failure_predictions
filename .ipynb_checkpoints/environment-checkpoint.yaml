@@ -1,0 +1,17 @@
+name: batfailpred
+
+channels:
+  - conda-forge
+
+dependencies:
+  - pip # for pip dependencies
+  # Python
+  - python=3.8
+  # Jupyter
+  - jupyterlab
+  - numpy
+  - pandas
+  - pandas-profiling
+  - matplotlib
+  - seaborn
+  

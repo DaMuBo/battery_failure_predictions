@@ -20,3 +20,37 @@ Daniel Müller
 * An welchem Punkt lassen die Kapazitäten von Batterien stark nach?
 * gibt es Hinweise aus den Daten die auf einen baldigen Leistungsabfall der Batterien hindeuten?
 * ...
+
+
+## Installation
+
+Es gibt zwei Möglichkeiten das Projekt zu installieren.
+
+via pip oder via conda
+
+### Conda Installation
+
+* Gehe via Command Line in den Ordner des Projekts
+* Füge dann den folgenden Befehl in das Projekt ein
+
+ conda env create -f environment.yaml
+ 
+ * Danach kannst du mit dem folgenden Befehl das Environment aktivieren und nutzen
+ 
+ conda activate batfailpred
+ 
+
+### Pip installation
+
+* Gehe via Command Line in den Ordner des Projekts
+* Füge dann die folgenden Befehl in das Projekt ein
+
+python3 -m venv batfailpred
+
+* Zum aktivieren
+
+batfailpred/Scripts/activate
+
+* installieren der requirements in das virtuelle environment
+
+pip install -r requirements.txt
