@@ -58,20 +58,20 @@ def feature_creator(df, columns,groupby, function = 'mean',frame='all'):
         
     if frame == 'all':
         if function == 'mean':
-            tmp = df[selector].groupby(groupby).mean().reset_index()    
+            tmp = df[selector].groupby(groupby, observed=True).expanding().mean().reset_index().sort_index()  
         elif function == 'median':
-            tmp = df[selector].groupby(groupby).median().reset_index()
+            tmp = df[selector].groupby(groupby, observed=True).expanding().median().reset_index().sort_index()  
         elif function == 'std':
-            tmp = df[selector].groupby(groupby).agg(np.std, ddof=1).reset_index()
+            tmp = df[selector].groupby(groupby, observed=True).expanding().agg(np.std, ddof=1).reset_index().sort_index()  
         elif function == 'min':
-            tmp = df[selector].groupby(groupby).min().reset_index()
+            tmp = df[selector].groupby(groupby, observed=True).expanding().min().reset_index().sort_index()  
         elif function == 'max':
-            tmp = df[selector].groupby(groupby).max().reset_index()
+            tmp = df[selector].groupby(groupby, observed=True).expanding().max().reset_index().sort_index()  
         elif function == 'count':
-            tmp = df[selector].groupby(groupby).size().reset_index()
+            tmp = df[selector].groupby(groupby, observed=True).expanding().size().reset_index().sort_index()  
             new_names[0] = f"{function}_entrys_{frame}"
         elif function == 'sum':
-            tmp = df[selector].groupby(groupby).sum().reset_index()
+            tmp = df[selector].groupby(groupby, observed=True).expanding().sum().reset_index().sort_index()  
         else:
             raise ValueError("""Unknown function provided. Select one of the defined functions. 
                              For more Information see description of Function""")
