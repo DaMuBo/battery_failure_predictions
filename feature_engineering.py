@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import logging
+
 
 
 
@@ -58,39 +60,74 @@ def feature_creator(df, columns,groupby, function = 'mean',frame='all'):
         
     if frame == 'all':
         if function == 'mean':
-            tmp = df[selector].groupby(groupby, observed=True).expanding().mean().reset_index().sort_index()  
+            tmp = df[selector].groupby(groupby, observed=True).expanding().mean().reset_index().sort_index()
         elif function == 'median':
             tmp = df[selector].groupby(groupby, observed=True).expanding().median().reset_index().sort_index()  
         elif function == 'std':
-            tmp = df[selector].groupby(groupby, observed=True).expanding().agg(np.std, ddof=1).reset_index().sort_index()  
+            tmp = df[selector].groupby(groupby, observed=True).expanding().std().reset_index().sort_index()
+            #.agg(np.std, ddof=1)  
         elif function == 'min':
             tmp = df[selector].groupby(groupby, observed=True).expanding().min().reset_index().sort_index()  
         elif function == 'max':
             tmp = df[selector].groupby(groupby, observed=True).expanding().max().reset_index().sort_index()  
         elif function == 'count':
-            tmp = df[selector].groupby(groupby, observed=True).expanding().size().reset_index().sort_index()  
-            new_names[0] = f"{function}_entrys_{frame}"
+            tmp = df[selector].groupby(groupby, observed=True).expanding().count().reset_index().sort_index()  
         elif function == 'sum':
             tmp = df[selector].groupby(groupby, observed=True).expanding().sum().reset_index().sort_index()  
         else:
             raise ValueError("""Unknown function provided. Select one of the defined functions. 
                              For more Information see description of Function""")
+        tmp[columns] = tmp[columns].apply(pd.to_numeric, downcast="float")
     else:
-        print("Das hier ist nur ein dummy - das Framing muss noch ergänzt werden")
+        logging.info("Das hier ist nur ein dummy - das Framing muss noch ergänzt werden")
         return df
     
-    
     tmp.rename( new_names, axis=1,inplace=True)
+    tmp.drop("level_2",axis=1,inplace=True)
     
-    if isinstance(columns,list):
-        for value in new_names.values():
-            if value in df.columns:
-                df.drop(value,axis=1 , inplace=True)
-                
-                
-    elif new_names[columns] in df.columns:
-        df.drop(new_names[columns], axis=1 , inplace=True)   
-    df = df.merge(tmp, how='inner', on=groupby)
-    
-    
+    for value in new_names.values():
+        df[value] = tmp[value]
+
+    logging.info(f"<<< Added new feature function {function} to columns {columns} >>>")
     return df
+
+
+
+
+def target_creator(df,column = 'relativeTime',groupby= ['batteryname','zyklus'] , target = "target"):
+    """
+    Function takes a dataframe and calculates an target variable on it
+    
+    Inputs
+    ---------------
+    
+        df : DataFrame
+            The Input Dataframe with the core data
+        
+        column : String
+            The column name which defines the target variable
+        
+        groupby : List
+            The grouping function to get the max value out of it 
+        
+        target : String
+            Defined the name of the column where the value will be stored
+        
+        
+
+    
+    Outputs
+    ---------------
+    
+        Returns the input Dataframe with the desired target column applied
+    
+    """
+    selector = groupby +[column]
+    tmp = df[selector].groupby(groupby, observed=True).max().reset_index().sort_index()
+    
+    data = df.merge(tmp, how='inner',on=groupby)
+    data[target] = data[f"{column}_y"] - data[f"{column}_x"]
+    
+    logging.info(f"<<< Created target value out of {column} >>>")
+    
+    return data['target']
