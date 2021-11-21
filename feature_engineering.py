@@ -78,6 +78,26 @@ def feature_creator(df, columns,groupby, function = 'mean',frame='all'):
             raise ValueError("""Unknown function provided. Select one of the defined functions. 
                              For more Information see description of Function""")
         tmp[columns] = tmp[columns].apply(pd.to_numeric, downcast="float")
+    elif isnummeric(frame):
+        if function == 'mean':
+            tmp = df[selector].groupby(groupby, observed=True).rolling(frame).mean().reset_index().sort_index()
+        elif function == 'median':
+            tmp = df[selector].groupby(groupby, observed=True).rolling(frame).median().reset_index().sort_index()  
+        elif function == 'std':
+            tmp = df[selector].groupby(groupby, observed=True).rolling(frame).std().reset_index().sort_index()
+            #.agg(np.std, ddof=1)  
+        elif function == 'min':
+            tmp = df[selector].groupby(groupby, observed=True).rolling(frame).min().reset_index().sort_index()  
+        elif function == 'max':
+            tmp = df[selector].groupby(groupby, observed=True).rolling(frame).max().reset_index().sort_index()  
+        elif function == 'count':
+            tmp = df[selector].groupby(groupby, observed=True).rolling(frame).count().reset_index().sort_index()  
+        elif function == 'sum':
+            tmp = df[selector].groupby(groupby, observed=True).rolling(frame).sum().reset_index().sort_index()  
+        else:
+            raise ValueError("""Unknown function provided. Select one of the defined functions. 
+                             For more Information see description of Function""")
+        tmp[columns] = tmp[columns].apply(pd.to_numeric, downcast="float")
     else:
         logging.info("Das hier ist nur ein dummy - das Framing muss noch ergänzt werden")
         return df
@@ -131,3 +151,50 @@ def target_creator(df,column = 'relativeTime',groupby= ['batteryname','zyklus'] 
     logging.info(f"<<< Created target value out of {column} >>>")
     
     return data['target']
+
+
+
+def calc_previous_cycles(df,columns = ['batteryname','zyklus'], types = 'D'):
+    """
+    Function calclulates the number of previous Cycles (Charging or Discharing cycles)
+    
+    Inputs
+    ---------------
+    
+        df : DataFrame
+            The Input Dataframe with the core data
+        
+        columns : List
+            The column list which holds the grouping functions
+        
+        types : String
+            Defining the kind of the cycle which has to be calculated
+            [
+            D : Discharge
+            C : Charge
+            ]
+        
+    
+    Outputs
+    ---------------
+    
+        Returns a series like a column which has been calculated
+    
+    """
+
+    
+    if types == 'D':
+        target_c = 'type_d'
+        df[target_c] = df['type'].replace({"D":1,"C":0,'R':0})
+    elif types == 'C':
+        target_c = 'type_c'
+        df[target_c] = df['type'].replace({"D":0,"C":1,'R':0})
+    columns = columns + [target_c]
+    test = df[columns].groupby(columns, observed=True).nunique().reset_index().sort_index()
+    df.drop([target_c], axis=1, inplace= True)
+    test2 = test.groupby([columns[0]]).expanding().sum().reset_index()
+    test[target_c] = test2[target_c]
+    erg = df.merge(test, how = 'inner', on =  ['batteryname','zyklus'])
+    return erg[target_c]
+    
+    
