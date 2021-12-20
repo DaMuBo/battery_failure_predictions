@@ -54,3 +54,14 @@ batfailpred/Scripts/activate
 * installieren der requirements in das virtuelle environment
 
 pip install -r requirements.txt
+
+
+## running the Application
+
+* in dem Projektordner
+
+streamlit run main.py
+
+* öffne folgende Adresse im Browser
+
+http://localhost:8501
