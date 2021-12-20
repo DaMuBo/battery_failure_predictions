@@ -8,6 +8,7 @@ Sebastian Schmorleiz,
 Daniel Müller
 
 # Project Structure
+![image info](./images/project_structure.png)
 * data - includes the data files for analysis parts
  * CSV - source data in csv form
  * Prepared - Includes prepared data with every step
