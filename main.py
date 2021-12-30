@@ -40,7 +40,39 @@ def create_appdata(location):
         else:
             liste.append(4)
     df3['klasse'] = liste
-    df3.reset_index()
+    
+    df3 = df3.reset_index()
+    # klassifikation nach Amperezahl
+    liste = []
+    for n in df3['batteryname_']:
+        if n in ['RW17','RW18','RW19','RW20','RW25','RW26','RW27','RW28']:
+            liste.append('hohe Ampere')
+        elif n in ['RW13','RW14','RW15','RW16','RW21','RW22','RW23','RW24']:
+            liste.append('niedrige Ampere')
+        else:
+            liste.append('neutrale Ampere')
+    df3['verteilung'] = liste
+    
+    # klassifikaton nach raumtemperatur
+    liste = []
+    for n in df3['batteryname_']:
+        if n in ['RW21','RW22','RW23','RW24','RW25','RW26','RW27','RW28']:
+            liste.append('40')
+        else:
+            liste.append('20-25')
+    df3['raumtemperatur'] = liste
+    
+    # klassifikation nach auf und entladungs randomisierung
+    liste = []
+    for n in df3['batteryname_']:
+        if n in ['RW9','RW10','RW11','RW12']:
+            liste.append('auf- und entladen')
+        else:
+            liste.append('entladen')
+    df3['randomisiert'] = liste
+            
+    
+
     df3.to_csv(f"{folder}\\df_batterie_klasse.csv", sep=',', index=True)
     
     df2 = df2.merge(df3, left_on="batteryname_",right_on="batteryname_")

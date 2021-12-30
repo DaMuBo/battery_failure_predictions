@@ -23,13 +23,29 @@ def bar_chart(df,x,y,group, title="Bar Chart"):
     """
     
     data = df
-    colormap = {0:'green',
-                1:'lightgreen',
-                2:'yellow',
-                3:'orange',
-                4:'red'
-               }
+    if group == 'klasse':
+        colormap = {0:'green',
+                    1:'lightgreen',
+                    2:'yellow',
+                    3:'orange',
+                    4:'red'
+                   }
+    elif group == 'verteilung':
+        colormap = {'neutrale Ampere':'grey',
+                    'hohe Ampere':'red',
+                    'niedrige Ampere':'green'
+                   }
+    elif group == 'raumtemperatur':
+        colormap = {'40':'red',
+                    '20-25':'green'
+                   }
+    elif group == 'randomisiert':
+        colormap = {'auf- und entladen':'red',
+                    'entladen':'green'
+                   }
+        
     data['color'] = [colormap[x] for x in df[group]]
+    
     source = ColumnDataSource(data)
 
     p = figure(title=title, x_range=data[x])
@@ -46,12 +62,26 @@ def line_chart(df,x,y,group, title="Line Chart"):
     """
     data = df
     liste = set(data['batteryname_'])
-    colormap = {0:'green',
-                1:'lightgreen',
-                2:'yellow',
-                3:'orange',
-                4:'red'
-               }
+    if group == 'klasse':
+        colormap = {0:'green',
+                    1:'lightgreen',
+                    2:'yellow',
+                    3:'orange',
+                    4:'red'
+                   }
+    elif group == 'verteilung':
+        colormap = {'neutrale Ampere':'grey',
+                    'hohe Ampere':'red',
+                    'niedrige Ampere':'green'
+                   }
+    elif group == 'raumtemperatur':
+        colormap = {'40':'red',
+                    '20-25':'green'
+                   }
+    elif group == 'randomisiert':
+        colormap = {'auf- und entladen':'red',
+                    'entladen':'green'
+                   }
     data['color'] = [colormap[x] for x in df[group]]
 
     p = figure(title=title, x_axis_label=x, y_axis_label=y)
@@ -92,4 +122,14 @@ def app():
     figure = line_chart(df, 'time_amin','amperestunden','klasse')
     st.bokeh_chart(figure,use_container_width=True)
     
-
+    st.write("Datensätze Reference Discharge nach Zeitverlauf in Sekunden klassifiziert nach Ampereentladungsstärke")
+    figure = line_chart(df, 'time_amin','amperestunden','verteilung')
+    st.bokeh_chart(figure,use_container_width=True)
+    
+    st.write("Datensätze Reference Discharge nach Zeitverlauf in Sekunden klassifiziert nach raumtemperatur")
+    figure = line_chart(df, 'time_amin','amperestunden','raumtemperatur')
+    st.bokeh_chart(figure,use_container_width=True)
+    
+    st.write("Datensätze Reference Discharge nach Zeitverlauf in Sekunden klassifiziert nach Entlade/Aufladeart")
+    figure = line_chart(df, 'time_amin','amperestunden','randomisiert')
+    st.bokeh_chart(figure,use_container_width=True)
