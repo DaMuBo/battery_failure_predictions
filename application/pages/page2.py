@@ -14,6 +14,8 @@ from bokeh.models.tools import HoverTool
 from bokeh.palettes import Spectral6
 
 
+
+
 def bar_chart(df,x,y,group, title="Bar Chart"):
     """
     
@@ -34,6 +36,8 @@ def bar_chart(df,x,y,group, title="Bar Chart"):
     p.vbar(source=source,x=x, top= y, fill_color='color')
     
     return p
+   
+    
     
     
 def line_chart(df,x,y,group, title="Line Chart"):
@@ -56,8 +60,10 @@ def line_chart(df,x,y,group, title="Line Chart"):
         source = ColumnDataSource(data[data.batteryname_== i])
         p.line(source=source,x=x, y= y, line_color =color, legend_label=i)
     return p
-    
-    
+
+
+
+
 def app():
     st.markdown("## Analyse der Batterien / Referenz Entladungen")
     

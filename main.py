@@ -5,7 +5,7 @@ import altair as alt
 
 from application.bokeh_chart import *
 from application.multipage import *
-from application.pages import page1,page2 # import pages here
+from application.pages import page1,page2,page3 # import pages here
 
 def create_appdata(location):
     """
@@ -20,6 +20,8 @@ def create_appdata(location):
     df2 = pd.DataFrame(df[['batteryname_','comment_']])
     df2 = df2.groupby(['batteryname_','comment_']).agg({'batteryname_':'count'})
     df2.to_csv(f"{folder}\\df_count_data_battery.csv", sep=',', index=True)
+    
+    df_sum = df[df.type_ == 'D'][['batteryname_','amperestunden']].groupby(['batteryname_']).agg({'amperestunden':'sum'}).rename(columns={'amperestunden':'amperestunden_gesamt'}).reset_index()
     
     # Berechnung anzahl Reference discharges je battery
     df2 = df[df.comment_ == 'reference discharge'].copy()
@@ -45,24 +47,31 @@ def create_appdata(location):
     df2.to_csv(f"{folder}\\df_reference_discharges.csv", sep=',', index=False)
     
     df = df.merge(df3, left_on="batteryname_",right_on="batteryname_")
+    df = df.merge(df_sum, left_on="batteryname_",right_on="batteryname_")
     df.to_csv(f"{folder}\\df_app_data.csv", sep=',', index=False)
+    
+    df_sum.to_csv(f"{folder}\\df_battery_leistung.csv", sep=',', index=False)
     return True
 
 
 
 c_fold = fu.get_folder()
-create_appdata(c_fold)
+
+# only activate when needed to recalculate the values
+#create_appdata(c_fold)
 
 # Create an instance of the app 
 app = MultiPage()
 
+if st.button("reload data preparations for Application"):
+    create_appdata(c_fold)
 # Title of the main page
 st.title("Analysis of Battery Failure Predictions")
 
 # Add all your applications (pages) here
 app.add_page("Data Overview", page1.app)
-app.add_page("Data Reference Discharges", page2.app)
-#app.add_page("Machine Learning", machine_learning.app)
+app.add_page("Reference Discharge Analysis", page2.app)
+app.add_page("Battery Ampere Hour Analysis", page3.app)
 #app.add_page("Data Analysis",data_visualize.app)
 #app.add_page("Y-Parameter Optimization",redundant.app)
 
