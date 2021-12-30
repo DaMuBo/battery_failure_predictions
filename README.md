@@ -8,6 +8,7 @@ Sebastian Schmorleiz,
 Daniel Müller
 
 # Project Structure
+![image info](./images/project_structure.png)
 * data - includes the data files for analysis parts
  * CSV - source data in csv form
  * Prepared - Includes prepared data with every step
@@ -54,3 +55,14 @@ batfailpred/Scripts/activate
 * installieren der requirements in das virtuelle environment
 
 pip install -r requirements.txt
+
+
+## running the Application
+
+* in dem Projektordner
+
+streamlit run main.py
+
+* öffne folgende Adresse im Browser
+
+http://localhost:8501
