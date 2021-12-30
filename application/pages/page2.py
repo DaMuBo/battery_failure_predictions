@@ -1,5 +1,5 @@
 """
-Erzeugt die Einstellungen zu den Klassifizierungen in den Daten 
+Erzeugt die Seite für die analyse der Referenz Discharges
 """
 
 import streamlit as st
@@ -59,7 +59,7 @@ def line_chart(df,x,y,group, title="Line Chart"):
     
     
 def app():
-    st.markdown("## Data Classification")
+    st.markdown("## Analyse der Batterien / Referenz Entladungen")
     
     c_fold = fu.get_folder()
     folder = c_fold + '\data\Application'
@@ -68,11 +68,11 @@ def app():
     df = pd.read_csv(f"{folder}\\df_batterie_klasse.csv", sep=',')
 
     # blockchart auf reference discharge muss noch in plotly o.ä. geändert werden.
-    titel = "Klassifizierung der Daten nach Anzahl Referenz Entladungen"
+    titel = "Daten Klassifizierung"
     figure = bar_chart(df.sort_values(['anzahl'], ascending=False),'batteryname_','anzahl','klasse', titel)
     st.bokeh_chart(figure,use_container_width=True)
 
-    st.write(df)
+    # st.write(df)
     
     # line chart
     
@@ -80,6 +80,10 @@ def app():
     st.write("Datensätze Reference Discharge",df)
     
     figure = line_chart(df,'zyklus_','amperestunden','klasse')
+    st.bokeh_chart(figure,use_container_width=True)
+    
+    st.write("Datensätze Reference Discharge nach Zeitverlauf in Sekunden")
+    figure = line_chart(df, 'time_amin','amperestunden','klasse')
     st.bokeh_chart(figure,use_container_width=True)
     
 

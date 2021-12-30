@@ -8,7 +8,9 @@ from application.multipage import *
 from application.pages import page1,page2 # import pages here
 
 def create_appdata(location):
-        
+    """
+    Erzeugt zu den Features weitere Informationen die für die Analyse notwendig sind und legt diese ab.
+    """
     folder = location + '\data\Application' # application folder
     folder_final = location + '\data\Processed\\final'
 
@@ -41,6 +43,9 @@ def create_appdata(location):
     
     df2 = df2.merge(df3, left_on="batteryname_",right_on="batteryname_")
     df2.to_csv(f"{folder}\\df_reference_discharges.csv", sep=',', index=False)
+    
+    df = df.merge(df3, left_on="batteryname_",right_on="batteryname_")
+    df.to_csv(f"{folder}\\df_app_data.csv", sep=',', index=False)
     return True
 
 
@@ -56,7 +61,7 @@ st.title("Analysis of Battery Failure Predictions")
 
 # Add all your applications (pages) here
 app.add_page("Data Overview", page1.app)
-app.add_page("Data Classification", page2.app)
+app.add_page("Data Reference Discharges", page2.app)
 #app.add_page("Machine Learning", machine_learning.app)
 #app.add_page("Data Analysis",data_visualize.app)
 #app.add_page("Y-Parameter Optimization",redundant.app)
