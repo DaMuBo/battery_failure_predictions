@@ -89,13 +89,11 @@ def create_appdata(location):
 
 c_fold = fu.get_folder()
 
-# only activate when needed to recalculate the values
-#create_appdata(c_fold)
 
 # Create an instance of the app 
 app = MultiPage()
 
-if st.button("reload data preparations for Application"):
+if st.sidebar.button("reload data preparations for Application"):
     create_appdata(c_fold)
 # Title of the main page
 st.title("Analysis of Battery Failure Predictions")
