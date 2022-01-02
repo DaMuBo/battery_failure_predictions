@@ -45,9 +45,11 @@ def bar_chart(df,x,y,group=None, title="Bar Chart"):
         data['color'] = [colormap[x] for x in df[group]]
 
         source = ColumnDataSource(data)
-
-        p = figure(title=title, x_range=data[x])
+        TOOLTIPS = [(group, f"@{group}")
+                   ]
+        p = figure(title=title, x_range=data[x], tooltips= TOOLTIPS)
         p.vbar(source=source,x=x, top= y, fill_color='color', width = 0.9)
+
         p.xgrid.grid_line_color = None
         
     return p
@@ -81,9 +83,11 @@ def line_chart(df,x,y,group, title="Line Chart"):
         colormap = {'auf- und entladen':'red',
                     'entladen':'green'
                    }
+    
     data['color'] = [colormap[x] for x in df[group]]
 
-    p = figure(title=title, x_axis_label=x, y_axis_label=y)
+    TOOLTIPS = [(group, f"@{group}"),("batteryname","@batteryname_")]
+    p = figure(title=title, x_axis_label=x, y_axis_label=y, tooltips=TOOLTIPS)
     for i in liste: 
         color = colormap[data[group][data.batteryname_== i].to_list()[0]]
         source = ColumnDataSource(data[data.batteryname_== i])
