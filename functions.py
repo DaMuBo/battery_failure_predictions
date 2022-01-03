@@ -10,6 +10,8 @@ def get_folder():
     """
     return os.path.dirname(os.path.abspath(__file__))
 
+
+
 def csv_einlesen(p_fold):
     """
     liest alle CSV dateien aus dem angegebenen Ordner aus und fügt diese in ein dataframe zusammen.
@@ -27,3 +29,18 @@ def csv_einlesen(p_fold):
             df = df.append(tempdf, ignore_index=True)
             print('Einlesen von ', file, ' erfolgreich')
     return df
+
+
+# Where to save the figures
+wdir = "."
+fig_path = os.path.join(wdir, "images")
+os.makedirs(fig_path, exist_ok=True)
+data_path = os.path.join(wdir, "data")
+os.makedirs(data_path, exist_ok=True)
+
+def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):
+    path = os.path.join(fig_path, fig_id + "." + fig_extension)
+    print("Saving figure", fig_id)
+    if tight_layout:
+        plt.tight_layout()
+    plt.savefig(path, format=fig_extension, dpi=resolution)

@@ -1,5 +1,6 @@
 import functions as fu
 import pandas as pd
+import numpy as np
 import streamlit as st
 import altair as alt
 
@@ -83,6 +84,19 @@ def create_appdata(location):
     df.to_csv(f"{folder}\\df_app_data.csv", sep=',', index=False)
     
     df_sum.to_csv(f"{folder}\\df_battery_leistung.csv", sep=',', index=False)
+    
+    # aufbereitung für feature importance
+    daten = pd.read_csv(f"{folder_final}\\df_fertige_features.csv", sep=',')
+    daten = daten[daten.comment_ == 'reference discharge']
+    daten.drop(["batteryname_","comment_","type_"], axis=1, inplace=True) #brauch ich hier nicht
+    daten.drop(["time_amin"], axis=1, inplace=True) #zu viel überschneidung mit *_leicht_vorher
+    daten = daten[daten["amperestunden"] != 0]
+    spalten_mit_ausreißern = ["temperature_amax","temperature_amin",'temperature_mean']
+    for spalte in spalten_mit_ausreißern:
+        neuer_wert = daten[daten[spalte] > np.percentile(daten[spalte],10)][spalte].median() #ersetzen durch den Median der Restwerte
+        daten.loc[daten[spalte] < np.percentile(daten[spalte],10),spalte] = neuer_wert
+    daten.to_csv(f"{folder}\\df_feature_importance_data.csv", sep=',', index=False)
+    
     return True
 
 

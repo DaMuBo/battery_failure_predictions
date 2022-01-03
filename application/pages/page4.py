@@ -14,6 +14,11 @@ from bokeh.models import ColumnDataSource
 from bokeh.models.tools import HoverTool
 from bokeh.palettes import Spectral6
 
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
 def app():
     st.write("## Analyse der Feature Importance")
     
@@ -21,21 +26,16 @@ def app():
     folder = c_fold + '\data\Application'
     folder_final = c_fold + '\data\Processed\\final'
     
-    df = pd.read_csv(f"{folder}\\df_reference_discharges.csv", sep=',')
-    selektion_b = st.multiselect("Wähle zu betrachtende Batterien aus",df['batteryname_'])
-    selektion_a = st.multiselect("Wähle zu betrachtende Ampereentladungs Klassifizierung aus",df['verteilung'].unique())
-    selektion_t = st.multiselect("Wähle zu betrachtende Raumtemperatur aus",df['raumtemperatur'].unique())
-    selektion_r = st.multiselect("Wähle zu betrachtende Randomisierungsart aus",df['randomisiert'].unique())
+    df = pd.read_csv(f"{folder}\\df_feature_importance_data.csv", sep=',')
     
-    # filterungen für das bar chart
-    if len(selektion_b) > 0:
-        df = df[df.batteryname_.isin(selektion_b)]
-    if len(selektion_a) > 0:
-        df = df[df.verteilung.isin(selektion_a)]
-    if len(selektion_t) > 0:
-        df = df[df.raumtemperatur.isin(selektion_t)]
-    if len(selektion_r) > 0:
-        df = df[df.randomisiert.isin(selektion_r)]
-        
-    figure = line_chart(df,'zyklus_','amperestunden','klasse')
-    st.bokeh_chart(figure,use_container_width=True)
+    # Histogramme erzeugen
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    df.hist(bins=50, figsize=(20,15))
+    plt.show()
+    st.pyplot()
+    
+    st.write("## Korrelationen der Features zu den Amperestunden")
+    correlation = df.corr()
+    plt.figure(figsize=(8,8))
+    sns.heatmap(correlation[["amperestunden"]].sort_values(by=['amperestunden'], ascending=False), vmin=-1, cmap='coolwarm', annot=True)
+    st.pyplot()
