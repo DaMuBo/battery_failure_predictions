@@ -96,3 +96,15 @@ def line_chart(df,x,y,group, title="Line Chart"):
     
     
     
+def heatmap(df,x,y,group, title="Heatmap Chart"):
+    "Creates a figure to show a Heatmap for different values -> correlation analysis between features"
+    data = df
+    
+    
+    
+    p = figure(title=title, x_range=list(data.index), y_range=list(reversed(data.columns)))
+    source = ColumnDataSource(data)
+    p.rect(x=x, y=y, width=1, height=1, source=source,
+       line_color=None)
+    
+    return p
