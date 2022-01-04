@@ -39,7 +39,7 @@ def temp_hoch(temperature_amax, relativeTime_amax):
     else:
         return 0
         
-if _name__ == "__main__":
+if __name__ == "__main__":
     # Pfade setzen
     c_fold = fu.get_folder()
     p_fold = c_fold + '\data\Prepared'
@@ -86,7 +86,7 @@ if _name__ == "__main__":
             df_pv['time_entladen_stark_vorher'] = df_pv.time_entladen_stark.cumsum()
             df_pv['time_entladen_leicht_vorher'] = df_pv.time_entladen_leicht.cumsum()
             df_pv['time_laden_stark_vorher'] = df_pv.time_laden_stark.cumsum()
-            df_pv['time_laden_stark_vorher'] = df_pv.time_laden_leicht.cumsum()
+            df_pv['time_laden_leicht_vorher'] = df_pv.time_laden_leicht.cumsum()
             df_pv['time_pause_vorher'] = df_pv.time_pause.cumsum()
 
 
@@ -129,6 +129,7 @@ if _name__ == "__main__":
         "time_entladen_stark_vorher",
         "time_entladen_leicht_vorher",
         "time_laden_stark_vorher",
+        "time_laden_leicht_vorher",
         "time_pause_vorher",
         "time_temp_hoch",
         "time_temp_hoch_vorher"

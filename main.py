@@ -6,7 +6,7 @@ import altair as alt
 
 from application.bokeh_chart import *
 from application.multipage import *
-from application.pages import page1,page2,page3,page4 # import pages here
+from application.pages import page1,page2,page3,page4,page5 # import pages here
 
 def create_appdata(location):
     """
@@ -117,6 +117,7 @@ app.add_page("Data Overview", page1.app)
 app.add_page("Reference Discharge Analysis", page2.app)
 app.add_page("Battery Ampere Hour Analysis", page3.app)
 app.add_page("Feature Importance Analysis", page4.app)
+app.add_page("Training ML Modell", page5.app)
 #app.add_page("Data Analysis",data_visualize.app)
 #app.add_page("Y-Parameter Optimization",redundant.app)
 
