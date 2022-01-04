@@ -5,6 +5,7 @@ import streamlit as st
 import pandas as pd
 
 import functions as fu
+from application.bokeh_chart import *
 
 from bokeh.plotting import figure
 from bokeh.io import output_file, show
@@ -13,32 +14,6 @@ from bokeh.models.tools import HoverTool
 from bokeh.palettes import Spectral6
 
 
-
-def bar_chart(df,x,y,group=None, title="Bar Chart"):
-    """
-    
-    creates a figure for showing in streamlit
-    """
-    
-    data = df
-    colormap = {0:'green',
-                1:'lightgreen',
-                2:'yellow',
-                3:'orange',
-                4:'red'
-               }
-    if group is not None:
-        data['color'] = [colormap[x] for x in df[group]]
-        source = ColumnDataSource(data)
-        p = figure(title=title, x_range=data[x])
-        p.vbar(source=source,x=x, top= y, fill_color='color')
-    else:
-        source = ColumnDataSource(data)
-        p = figure(title=title, x_range=data[x])
-        p.vbar(source=source,x=x, top= y, width = 0.9)
-        p.xgrid.grid_line_color = None
-    
-    return p
 
 
 
