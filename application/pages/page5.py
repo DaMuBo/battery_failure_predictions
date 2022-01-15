@@ -40,13 +40,12 @@ def app():
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
     train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
-
+    auswahl = st.radio("Auswahl Modell",('Trainiertes Modell','Training neues Modell'))
     daten = train_set.drop("amperestunden", axis=1)
     daten_labels = train_set["amperestunden"].copy()
 
     test_daten = train_set.drop("amperestunden", axis=1)
     test_daten_labels = train_set["amperestunden"].copy()
-    st.write("=== Train Test Split Performed ===")
     
     if st.button("Start ML Procedures"):
         c_fold = fu.get_folder()
@@ -78,9 +77,8 @@ def app():
             ])
 
         daten_tr = full_pipeline.fit_transform(daten)
-
         st.write("=== Preprocessing Pipeline Executed ===")
-        if st.button("Train new Randomforest Model"):
+        if auswahl == 'Training neues Modell':
             rfr_pm     = RandomForestRegressor()
             params = {'n_estimators': range(100,1500),
                       'n_jobs':       [-1],
@@ -106,6 +104,7 @@ def app():
 
         prepare_and_predict_pipeline_load = joblib.load(f"{folder}\\pickle\\prepare_and_predict_pipeline.pkl")
 
+        #prepare_and_predict_pipeline_load = joblib.load(f"{folder}\\pickle\\best_model.pkl")
 
         st.write(f"=== Predicting with Test Data === ")
         test_daten_pred = prepare_and_predict_pipeline_load.predict(test_daten)
@@ -120,6 +119,10 @@ def app():
 
         st.write("=== Most Important Features for the ML Model: ===")
         st.write(sorted(zip(prepare_and_predict_pipeline_load['rfr_reg'].feature_importances_, daten.columns), reverse=True))
+        
+        
+        st.write("=== Model Hyperparams: ===")
+        st.write(prepare_and_predict_pipeline_load['rfr_reg'].get_params())
         
     if st.button("Linear Regression "):
         from sklearn.linear_model import LinearRegression   

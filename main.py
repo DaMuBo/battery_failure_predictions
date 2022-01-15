@@ -92,6 +92,7 @@ def create_appdata(location):
     daten.drop(["time_amin"], axis=1, inplace=True) #zu viel überschneidung mit *_leicht_vorher
     daten = daten[daten["amperestunden"] != 0]
     spalten_mit_ausreißern = ["temperature_amax","temperature_amin",'temperature_mean']
+    daten.to_csv(f"{folder}\\df_feature_importance_data_mit_ausreisser.csv", sep=',', index=False)
     for spalte in spalten_mit_ausreißern:
         neuer_wert = daten[daten[spalte] > np.percentile(daten[spalte],10)][spalte].median() #ersetzen durch den Median der Restwerte
         daten.loc[daten[spalte] < np.percentile(daten[spalte],10),spalte] = neuer_wert

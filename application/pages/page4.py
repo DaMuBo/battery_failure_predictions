@@ -26,9 +26,17 @@ def app():
     folder = c_fold + '\data\Application'
     folder_final = c_fold + '\data\Processed\\final'
     
+    df = pd.read_csv(f"{folder}\\df_feature_importance_data_mit_ausreisser.csv", sep=',')
+    st.write("### Histogramm der Werte inkl. Ausreißer")
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    df.hist(bins=50, figsize=(20,15))
+    plt.show()
+    st.pyplot()
+    
     df = pd.read_csv(f"{folder}\\df_feature_importance_data.csv", sep=',')
     
     # Histogramme erzeugen
+    st.write("### Histogramm der Werte exklusive Ausreißer")
     st.set_option('deprecation.showPyplotGlobalUse', False)
     df.hist(bins=50, figsize=(20,15))
     plt.show()
